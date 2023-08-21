@@ -19,8 +19,10 @@ public:
 	void Init(IPAddress ZabbixServerAddr, uint16_t ZabbixServerPort, String ZabbixItemHostName);
 	int Send(void);
 	void ClearItem(void);
-	void AddItem(String key, float value);
-	void EspStatus(float totalMemory, float usedMemory, float freeMemory, float percentUsed);
+	void AddItemInt(String key, int value);
+	void AddItemFloat(String key, float value);
+	void AddItemString(String key, String value);
+	void EspStatus(int totalMemory, int usedMemory, int freeMemory, float percentUsed);
 
 private:
 	int createZabbixPacket(void);
