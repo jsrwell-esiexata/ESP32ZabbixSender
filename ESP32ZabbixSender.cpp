@@ -73,17 +73,15 @@ void ESP32ZabbixSender::AddItemString(String key, String value)
 
 void ESP32ZabbixSender::EspStatus(int totalMemory, int usedMemory, int freeMemory, float percentUsed)
 {
-	zabbixItemSize = 5;
-	zabbixItemList[0].key = "ping";
-	zabbixItemList[0].val = 1;
+	zabbixItemSize = 4;
+	zabbixItemList[0].key = "usage";
+	zabbixItemList[0].val = percentUsed;
 	zabbixItemList[1].key = "free";
 	zabbixItemList[1].val = freeMemory;
 	zabbixItemList[2].key = "total";
 	zabbixItemList[2].val = totalMemory;
 	zabbixItemList[3].key = "use";
 	zabbixItemList[3].val = usedMemory;
-	zabbixItemList[4].key = "usage";
-	zabbixItemList[4].val = percentUsed;
 }
 
 int ESP32ZabbixSender::createZabbixPacket(void)
