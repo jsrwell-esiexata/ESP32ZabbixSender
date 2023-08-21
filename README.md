@@ -1,30 +1,56 @@
 # ESP32ZabbixSender
-Library to realize the zabbix-sender on ESP32-Arduino
+Library to realize the connection of the ESP32 on Arduino with the Zabbix server.
 
-# How to install this library to Arduino IDE
-## Use git command
-(Windows and default arduino setting)
+# How to Start
+Add this on variables call:
+```c++
+ESP32ZabbixSender zSender;
+```
 
-    cd %USERPROFILE%\Documents\Arduino\libraries
-    git clone https://github.com/leruetkins/ESP32ZabbixSender.git
-## Use ZIP import function of the Arduino IDE
-Google it
+Add this on setup after wifi conection successfull:
+```c++
+// Add correct server IP, Port (commom used is 10051) and unique hostname of ESP32.
+zSender.Init("127.0.0.1", 10051, "MY_HOST_NAME");
+```
 
-# Usage
-See `sample_ESP32ZabbixSender/sample_ESP32ZabbixSender.ino`
+# How to Send Status
+To get status of ESP do this on the loop:
+```c++
+// Heap memory get.
+float freeMemory = esp_get_free_heap_size();
+float totalMemory = ESP.getHeapSize();
+float usedMemory = totalMemory - freeMemory;
+float cpuUsage = 100 - (freeMemory * 100 / totalMemory);
+```
+Then call this function:
+```c++
+// The keys received on zabbix will be: ping, total, use, free and usage.
+zSender.EspStatus(totalMemory, usedMemory, freeMemory, cpuUsage);
+zSender.Send();
+```
 
-    ESP32ZabbixSender zSender;
-    zSender.Init(IPAddress(192, 168, 35, 14), 10051, "IOTBOARD_00"); // Init zabbix server address, port, and hostname of item
-    zSender.ClearItem(); // clear item list
-    zSender.AddItem("air.temp", 29.62); // add item such as air temperture
-    zSender.AddItem("air.hum", 70.60); // add item such as air humidity
-    if (zSender.Send() == EXIT_FAILURE){ // send packet
-        // error handling
-    }
+# How to Send Custom Messages
+You can send this type of messages:
+```c++
+zSender.AddItemInt("mykeyname", 123); // To send integers
+zSender.AddItemFloat("mykeyname", 123.45); // To send float
+zSender.AddItemString("mykeyname", "My Value"); // To send Strings
+```
 
+The sequence of call must be:
+```c++
+// Fist.
+zSender.ClearItem(); // To reduce to 0 number of itens add on message.
+
+// Then.
+zSender.AddItemFunction("mykeyname", "my_value_in_correct_format");
+// "Function" must be replaced to "Int", "Float" or "String" and the second parameter must be the correct type.
+
+// Finally.
+zSender.Send(); // To send the group of data to Zabbix.
+```
 # Based on:  
 https://github.com/leruetkins/ESP32ZabbixSender
-https://github.com/zaphodus/ESP8266ZabbixSender
 
 ## Changes: 
-Renamed the files and changed the datatype of the value to be sent from float to String to enable a larger variety of information to be sent.
+The filenames is changed and new fuctions is created on the class, but is in the documentation here.
