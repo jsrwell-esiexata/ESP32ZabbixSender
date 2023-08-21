@@ -10,7 +10,7 @@ ESP32ZabbixSender zSender;
 Add this on setup after wifi conection successfull:
 ```c++
 // Add correct server IP, Port (commom used is 10051) and unique hostname of ESP32.
-zSender.Init("127.0.0.1", 10051, "MY_HOST_NAME");
+zSender.Init(IPAddress(127, 0, 0, 1), 10051, "MY_HOST_NAME");
 ```
 
 # How to Send Status
